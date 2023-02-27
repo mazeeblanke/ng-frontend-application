@@ -1,9 +1,10 @@
+import { Quest, RawQuest, RawQuestErr } from '@/types/quests';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Quest[] | string>): Promise<void> {
 	try {
 		// Save the data to the collection
-		const getRes = await fetch(`https://dummyjson.com/products?offset=0&limit=10`, {
+		const getRes: RawQuest[] | RawQuestErr = await fetch(`https://dummyjson.com/products?offset=0&limit=10`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json'
@@ -12,11 +13,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			.then((response) => response.json())
 			.then((data) => data.products);
 
-		if (getRes.code) {
+		if ((getRes as RawQuestErr).code) {
 			throw new Error('An error occurred while fetching the data');
 		}
 
-		const formattedToQuests = getRes.map((quest: any) => {
+		const formattedToQuests: Quest[] = (getRes as RawQuest[]).map((quest: RawQuest) => {
 			return {
 				id: quest.id,
 				skillTree: quest.category.replace('-', ' '), // 'home-decoration' => 'home decoration'
