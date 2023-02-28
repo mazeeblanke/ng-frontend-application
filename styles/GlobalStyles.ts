@@ -1,4 +1,9 @@
 import { createGlobalStyle, DefaultTheme } from 'styled-components';
+import { Cinzel } from '@next/font/google';
+
+const cinzel = Cinzel({
+	subsets: ['latin']
+})
 
 const GlobalStyle = createGlobalStyle<{ theme: DefaultTheme }>`
 //========================================================================================================
@@ -16,6 +21,10 @@ const GlobalStyle = createGlobalStyle<{ theme: DefaultTheme }>`
 
 body {
   background-color: ${({ theme }) => theme.colors.black};
+}
+
+html {
+	font-family: ${cinzel.style.fontFamily};
 }
 
 `;
